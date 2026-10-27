@@ -6,6 +6,8 @@ import java.io.File;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -24,6 +26,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive mSwerveDrive;
+  private final PhotonCamera mCamera = new PhotonCamera("PC_Camera");
 
   public SwerveSubsystem(File pConfigDir) {
     boolean isBlueAlliance = DriverStation.getAlliance().map(it -> it == DriverStation.Alliance.Blue).orElse(false);
@@ -55,6 +58,15 @@ public class SwerveSubsystem extends SubsystemBase {
     mSwerveDrive.setModuleEncoderAutoSynchronize(true, 3);
 
     mSwerveDrive.setMotorIdleMode(false);
+  }
+
+  @Override
+  public void periodic() {
+    var visionData = mCamera.getAllUnreadResults();
+    for (var visionResult : visionData) {
+        var target = visionResult.getBestTarget();
+        // TODO: Do something with the target data
+    }
   }
 
   /**
@@ -98,8 +110,8 @@ public class SwerveSubsystem extends SubsystemBase {
    *
    * @param initialHolonomicPose The pose to set the odometry to
    */
-  public void resetOdometry(Pose2d initialHolonomicPose) {
-    mSwerveDrive.resetOdometry(initialHolonomicPose);
+  public void resetOdometry(Pose2d pInitialHolonomicPose) {
+    mSwerveDrive.resetOdometry(pInitialHolonomicPose);
   }
 
   /**

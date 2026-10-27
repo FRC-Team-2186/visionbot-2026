@@ -24,7 +24,7 @@ public class RobotContainer {
       () -> -mDriverController.getLeftX()) //
       .withControllerRotationAxis(() -> -mDriverController.getRightX()) //
       .deadband(0.1) //
-      .scaleTranslation(0.8) //
+      .scaleTranslation(0.5) //
       .allianceRelativeControl(false);
 
   SwerveInputStream mDriveRobotOriented = mDriveFieldOriented.copy() //
